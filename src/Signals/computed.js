@@ -1,3 +1,5 @@
+import Signals from "./index";
+
 export class Computed {
   constructor(computeFn) {
     this._computeFn = computeFn;
@@ -8,13 +10,13 @@ export class Computed {
 
   get value() {
     if (this._isStale) {
-      const previousContext = currentAccessed;
-      currentAccessed = this;
+      const previousContext = Signals.currentAccessed;
+      Signals.currentAccessed = this;
       this._recomputeValue();
-      currentAccessed = previousContext;
+      Signals.currentAccessed = previousContext;
     }
-    if (currentAccessed) {
-      this._addDependent(currentAccessed);
+    if (Signals.currentAccessed) {
+      this._addDependent(Signals.currentAccessed);
     }
     return this._value;
   }

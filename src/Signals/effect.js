@@ -1,17 +1,17 @@
+import Signals from "./index";
+
 export class Effect {
   constructor(effectFn) {
     this._effectFn = effectFn;
     this._isStale = true;
-    this.currentAccessed = null;
     this._execute();
-    //this._effectQueue = [];
   }
 
   _execute() {
     if (this._isStale) {
-      currentAccessed = this;
+      Signals.currentAccessed = this;
       this._effectFn();
-      currentAccessed = null;
+      Signals.currentAccessed = null;
     }
     this._isStale = false;
   }
@@ -19,7 +19,7 @@ export class Effect {
   _update() {
     if (!this._isStale) {
       this._isStale = true;
-      effectQueue.push(this);
+      Signals.effectQueue.push(this);
     }
   }
 }

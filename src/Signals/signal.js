@@ -1,15 +1,15 @@
 import { executeEffects } from "./helpers";
+import Signals from "./index";
 
 export class Signal {
   constructor(initialValue) {
     this._value = initialValue;
     this._dependents = [];
-    //this._currentAccessed = null;
   }
 
   get value() {
-    if (currentAccessed) {
-      this._addDependent(currentAccessed);
+    if (Signals.currentAccessed) {
+      this._addDependent(Signals.currentAccessed);
     }
     return this._value;
   }
@@ -18,7 +18,7 @@ export class Signal {
     if (this._value !== newValue) {
       this._value = newValue;
       this._notifyDependents();
-      //this._currentAccessed = newValue;
+      Signals.currentAccessed = newValue;
       executeEffects();
     }
   }

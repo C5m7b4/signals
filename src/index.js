@@ -1,35 +1,30 @@
 console.log("ready to code");
 
-import { createSignal, createComputed, createEffect } from "./Signals";
+import Signals from "./Signals";
 
-// signals library goes here
+console.log("stuff", Signals);
 
-let currentAccessed = null;
-const effectQueue = [];
+// const count = Signals.createSignal(0);
+// const multiplier = Signals.createSignal(2);
 
-// end of signals library
+// Signals.createEffect(() => {
+//   console.log(
+//     "Effect called: Count is ",
+//     count.value,
+//     " and multiplier is ",
+//     multiplier.value
+//   );
+// });
 
-const count = createSignal(0);
-const multiplier = createSignal(2);
+// count.value = 1;
+// multiplier.value = 3;
 
-createEffect(() => {
-  console.log(
-    "Effect called: Count is ",
-    count.value,
-    " and multiplier is ",
-    multiplier.value
-  );
-});
+// const multipleCount = Signals.createComputed(
+//   () => count.value * multiplier.value,
+//   [count, multiplier]
+// );
 
-count.value = 1;
-multiplier.value = 3;
-
-const multipleCount = createComputed(
-  () => count.value * multiplier.value,
-  [count, multiplier]
-);
-
-console.log(multipleCount.value);
+// console.log(multipleCount.value);
 
 const todoForm = document.getElementById("todoForm");
 const todoInput = document.getElementById("todoInput");
@@ -37,10 +32,10 @@ const todoList = document.getElementById("todoList");
 const taskFilter = document.getElementById("taskFilter");
 const taskCounter = document.getElementById("taskCounter");
 
-const tasks = createSignal([]);
-const filter = createSignal("all");
+const tasks = Signals.createSignal([]);
+const filter = Signals.createSignal("all");
 
-const filteredTasks = createComputed(() => {
+const filteredTasks = Signals.createComputed(() => {
   const currentFilter = filter.value;
   const currentTasks = tasks.value;
   if (currentFilter === "all") {
@@ -52,20 +47,19 @@ const filteredTasks = createComputed(() => {
   }
 });
 
-const taskCount = createComputed(() => {
+const taskCount = Signals.createComputed(() => {
   return tasks.value.length;
 });
 
-const activeTaskCount = createComputed(() => {
+const activeTaskCount = Signals.createComputed(() => {
   return tasks.value.filter((task) => !task.completed).length;
 });
 
-const completedTaskCount = createComputed(() => {
+const completedTaskCount = Signals.createComputed(() => {
   return tasks.value.filter((task) => task.completed).length;
 });
 
 todoForm.addEventListener("submit", (event) => {
-  debugger;
   event.preventDefault();
   const taskTitle = todoInput.value.trim();
   if (taskTitle) {
@@ -79,7 +73,7 @@ taskFilter.addEventListener("change", (event) => {
   filter.value = event.target.value;
 });
 
-createEffect(() => {
+Signals.createEffect(() => {
   const currentTasks = filteredTasks.value;
   todoList.innerHTML = "";
   currentTasks.forEach((task, index) => {
@@ -99,7 +93,7 @@ createEffect(() => {
   });
 });
 
-createEffect(() => {
+Signals.createEffect(() => {
   taskCounter.textContent = `
         Total: ${taskCount.value},
         Active: ${activeTaskCount.value},
