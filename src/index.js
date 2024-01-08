@@ -2,8 +2,6 @@ console.log("ready to code");
 
 import Signals from "./Signals";
 
-console.log("stuff", Signals);
-
 // const count = Signals.createSignal(0);
 // const multiplier = Signals.createSignal(2);
 
@@ -31,9 +29,15 @@ const todoInput = document.getElementById("todoInput");
 const todoList = document.getElementById("todoList");
 const taskFilter = document.getElementById("taskFilter");
 const taskCounter = document.getElementById("taskCounter");
+const inputOutput = document.getElementById("inputCompute");
 
 const tasks = Signals.createSignal([]);
 const filter = Signals.createSignal("all");
+const input = Signals.createSignal("");
+
+todoInput.addEventListener("input", (event) => {
+  input.value = event.target.value;
+});
 
 const filteredTasks = Signals.createComputed(() => {
   const currentFilter = filter.value;
@@ -45,6 +49,10 @@ const filteredTasks = Signals.createComputed(() => {
   } else {
     return currentTasks.filter((task) => task.completed);
   }
+});
+
+const inputCompute = Signals.createComputed(() => {
+  return input.value;
 });
 
 const taskCount = Signals.createComputed(() => {
@@ -66,6 +74,7 @@ todoForm.addEventListener("submit", (event) => {
     const newTask = { title: taskTitle, completed: false };
     tasks.value = [...tasks.value, newTask];
     todoInput.value = "";
+    inputOutput.innerHTML = "";
   }
 });
 
@@ -98,4 +107,8 @@ Signals.createEffect(() => {
         Total: ${taskCount.value},
         Active: ${activeTaskCount.value},
         Completed: ${completedTaskCount.value}`;
+});
+
+Signals.createEffect(() => {
+  inputOutput.innerHTML = inputCompute.value;
 });
